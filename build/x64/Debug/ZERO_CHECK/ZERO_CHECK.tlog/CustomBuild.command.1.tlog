@@ -1,0 +1,10 @@
+^C:\PROJETO_HIDRO\BUILD\CMAKEFILES\5044C81E95A303577231B86D93642F08\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Projeto_Hidro -BC:/Projeto_Hidro/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Projeto_Hidro/build/ProjectoHumo.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

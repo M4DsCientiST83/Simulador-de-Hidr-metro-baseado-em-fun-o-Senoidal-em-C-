@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.12)
+project(ProjectoHumo)
+
+set(CMAKE_CXX_STANDARD 17)
+
+# Adiciona a pasta include ao caminho de includes
+include_directories(include)
+
+# Adiciona todos os arquivos fonte
+add_executable(simulador
+    src/main.cpp
+    src/Control.cpp
+    src/Hidrometro.cpp
+    src/Medicao.cpp
+    src/Config.cpp
+    src/Display.cpp
+)
