@@ -22,9 +22,9 @@ void Medicao::atualizar(int tempo, double dE, double vmFA)
     double fatorOscilatorio = 0.1 + (oscillacao * 0.9);
     
     double velocidadeOscilatoria = vmFA * fatorOscilatorio;
-    double vazaoDestaHora = vazaoEntrada(dE, velocidadeOscilatoria);
+    double vazao = vazaoEntrada(dE, velocidadeOscilatoria);
     
-    setVolume(vazaoDestaHora);
+    setVolume(vazao);
 }
 
 double Medicao::getVolume()
