@@ -17,7 +17,7 @@ class Medicao
 
         double vazaoEntrada(double dE, double vmFA);
 
-        void atualizar(int tempo, double dE, double fbE);
+        void atualizar(int tempo, double dE, double vmFA);
 
         double getVolume();
 
