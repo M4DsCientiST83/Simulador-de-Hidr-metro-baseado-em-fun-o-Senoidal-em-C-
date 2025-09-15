@@ -1,4 +1,5 @@
 {
     "diametro do cano de entrada em m": 0.025,
-    "velocidade média do fluxo de Água pelo cano de entrada": 1.5
+    "velocidade média do fluxo de Água pelo cano de entrada": 1.5,
+    "tempo de atualização do simulador": 10
 }

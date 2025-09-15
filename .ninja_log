@@ -1,0 +1,8 @@
+# ninja log v6
+41	1867	7796614014687166	CMakeFiles/simulador.dir/src/Display.cpp.obj	6204d5fbc91c6707
+26	2129	7796614014531811	CMakeFiles/simulador.dir/src/Medicao.cpp.obj	f3fe6be59e0d8be
+19	2308	7796614014466555	CMakeFiles/simulador.dir/src/Hidrometro.cpp.obj	23c9a0c0a55650b8
+4	2727	7796614014311047	CMakeFiles/simulador.dir/src/main.cpp.obj	e306d6f42920982e
+11	3618	7796614014381185	CMakeFiles/simulador.dir/src/Control.cpp.obj	14c8fcebe4c5d0d8
+34	5442	7796614014611756	CMakeFiles/simulador.dir/src/Config.cpp.obj	386490bcb3fd80d5
+5442	5844	7796614068693015	simulador.exe	712dde1936942844

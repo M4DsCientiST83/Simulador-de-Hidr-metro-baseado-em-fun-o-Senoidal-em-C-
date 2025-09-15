@@ -1,6 +1,6 @@
 #include "Hidrometro.hpp"
 
-Hidrometro::Hidrometro(double dE, double vmFA) : diam_entrada(dE), velmediaFluxoAgua(vmFA), medicao(), display() {}
+Hidrometro::Hidrometro(double dE, double vmFA, int tu) : diam_entrada(dE), velmediaFluxoAgua(vmFA), tempo_update(tu), medicao(), display() {}
 
 double Hidrometro::getDiamEnt()
 {
@@ -10,6 +10,11 @@ double Hidrometro::getDiamEnt()
 double Hidrometro::getvelmediaFluxoAgua()
 {
     return velmediaFluxoAgua;
+}
+
+int Hidrometro::getTempoUpdate()
+{
+    return tempo_update;
 }
 
 void Hidrometro::simular()
@@ -23,7 +28,7 @@ void Hidrometro::simular()
 
 
 
-        this_thread::sleep_for(chrono::seconds(2)); // 1h simulada = 2s reais
+        this_thread::sleep_for(chrono::seconds(getTempoUpdate())); // 1h simulada = 2s reais
 
         hora++;
 

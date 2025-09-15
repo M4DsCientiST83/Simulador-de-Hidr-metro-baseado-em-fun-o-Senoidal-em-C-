@@ -14,7 +14,7 @@ class Config
 {
     public:
 
-        static tuple<double, double> carregarDeArquivo(const string& nomeArquivo);
+        static tuple<double, double, int> carregarDeArquivo(const string& nomeArquivo);
 };
 
 #endif

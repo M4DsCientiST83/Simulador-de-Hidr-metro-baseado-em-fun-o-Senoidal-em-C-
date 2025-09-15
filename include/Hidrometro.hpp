@@ -12,16 +12,18 @@ class Hidrometro
 
     public: 
     
-        Hidrometro(double dE, double vmFA);
+        Hidrometro(double dE, double vmFA, int tu);
         void simular();
 
         double getDiamEnt();
         double getvelmediaFluxoAgua();
+        int getTempoUpdate();
 
 
     private:
 
         double diam_entrada, velmediaFluxoAgua;
+        int tempo_update;
         Display display;
         Medicao medicao;
 

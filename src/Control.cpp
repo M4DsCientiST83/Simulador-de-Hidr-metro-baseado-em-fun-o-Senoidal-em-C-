@@ -3,8 +3,8 @@
 
 Control::Control(const string &arquivoConfig)
 {
-    auto [dE,vmFA] = Config::carregarDeArquivo(arquivoConfig);
-    hidrometro = new Hidrometro(dE, vmFA);
+    auto [dE,vmFA, tu] = Config::carregarDeArquivo(arquivoConfig);
+    hidrometro = new Hidrometro(dE, vmFA, tu);
 }
 
 Control::~Control()
