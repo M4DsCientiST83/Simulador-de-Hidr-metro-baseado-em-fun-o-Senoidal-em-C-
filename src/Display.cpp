@@ -2,5 +2,5 @@
 
 void Display::exibir(int tempo, double volume)
 {
-    cout << "Hora " << tempo << " -> Volume acumulado: " << volume << " metros cubicos" << endl;
+    std::cout << "Hora " << tempo << " -> Volume acumulado: " << volume << " metros cubicos" << std::endl;
 }

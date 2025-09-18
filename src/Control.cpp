@@ -1,10 +1,12 @@
 #include "Control.hpp"
 #include "Config.hpp"
 
-Control::Control(const string &arquivoConfig)
+Control::Control(const string &arquivoConfig, Display *disp)
 {
-    auto [dE,vmFA, tu] = Config::carregarDeArquivo(arquivoConfig);
-    hidrometro = new Hidrometro(dE, vmFA, tu);
+    config.carregarDeArquivo(arquivoConfig);
+
+    // Passa o display para o hidrometro
+    hidrometro = new Hidrometro(config.getdE(), config.getvmFA(), config.gettu(), disp);
 }
 
 Control::~Control()

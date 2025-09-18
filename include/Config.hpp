@@ -7,14 +7,27 @@
 #include <tuple>
 #include "json.hpp"
 
-using namespace std;
-using json = nlohmann::json;
+using std::string;
+
 
 class Config
 {
     public:
 
-        static tuple<double, double, int> carregarDeArquivo(const string& nomeArquivo);
+        Config();
+        void carregarDeArquivo(const string& nomeArquivo);
+
+        ~Config() = default;
+
+        double getdE();
+        double getvmFA();
+        int gettu();
+
+    private:
+
+        double diamEnt; 
+        double velmedFA;
+        int tempoatt; 
 };
 
 #endif

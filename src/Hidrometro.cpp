@@ -1,6 +1,18 @@
 #include "Hidrometro.hpp"
 
-Hidrometro::Hidrometro(double dE, double vmFA, int tu) : diam_entrada(dE), velmediaFluxoAgua(vmFA), tempo_update(tu), medicao(), display() {}
+Hidrometro::Hidrometro(double dE, double vmFA, int tu, Display* disp) : diam_entrada(dE), velmediaFluxoAgua(vmFA), tempo_update(tu), medicao()
+{
+    if(disp) 
+        display = disp;
+
+    else 
+        display = new Display(); // padrão: console
+}
+
+Hidrometro::~Hidrometro() 
+{
+    delete display;
+}
 
 double Hidrometro::getDiamEnt()
 {
@@ -20,18 +32,11 @@ int Hidrometro::getTempoUpdate()
 void Hidrometro::simular()
 {
     int hora = 0;
-
-    while(1)
+    while(true) 
     {
-        medicao.atualizar(hora, getDiamEnt(), getvelmediaFluxoAgua());
-        display.exibir(hora, medicao.getVolume());
-
-
-
-        this_thread::sleep_for(chrono::seconds(getTempoUpdate())); // 1h simulada = 2s reais
-
+        medicao.atualizar(hora, diam_entrada, velmediaFluxoAgua);
+        display->exibir(hora, medicao.getVolume());
+        std::this_thread::sleep_for(std::chrono::seconds(tempo_update));
         hora++;
-
     }
-           
 }
