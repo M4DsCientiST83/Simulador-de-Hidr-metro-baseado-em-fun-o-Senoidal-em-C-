@@ -13,8 +13,8 @@ class DisplaySocket : public Display
 {
     public:
 
-        DisplaySocket(SOCKET clientSocket) : socket_fd(clientSocket) {}
-        
+        DisplaySocket(SOCKET clientSocket);
+
         void exibir(int tempo, double volume) override 
         {
             std::string msg = "tempo=" + std::to_string(tempo) + ";volume=" + std::to_string(volume) + "\n";
