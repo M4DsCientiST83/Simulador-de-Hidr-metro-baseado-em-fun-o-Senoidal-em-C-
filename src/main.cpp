@@ -68,7 +68,7 @@ int main()
     Control control(configPath.string(), &displaySocket);
     control.executar();
 
-    // Gera o Loop para que o código permaneça rodando de maneira ininterrupta
+    // Encerra os clientes da conexão 
     closesocket(client_fd);
     closesocket(server_fd);
     WSACleanup();

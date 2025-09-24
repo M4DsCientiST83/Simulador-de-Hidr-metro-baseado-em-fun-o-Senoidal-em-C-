@@ -1,0 +1,34 @@
+Explicação do programa em etapas:
+
+1 - O usuário roda o arquivo simulador.exe localizado em \build\Debug. Este é o arquivo em C++ com a lógica de funcionamento do hidrômetro, ele irá entrar na conexão TCP pela porta 5000 e aguardar a conexão do código em Java.
+
+2 - O usuário roda o arquivo HidrometroDisplay.java localizado em \HidrometroJava. Esté é o arquivo em Java com o algoritmo responsável pela exibição da tela do hidrômetro, uma vez que entre na conexão TCP pela porta 5000, irá 
+se conectar ao código em C++.
+
+obs.: os códigos já estão compilados, mas o usuário pode recompilá-los caso deseje. 
+* Para compilar o código C++ através do cmd, navegue até a pasta onde está localizado o projeto e rode "cmake --build .";
+* Para compilar o código Java através de outra janela do cmd, navegue até HidrometroJava e rode "javac HidrometroDisplay.java"
+
+3 - Uma vez que ambos códigos estão rodando, o usuário verá uma tela com o display do hidrômetro contendo as informações de volume e um status de "Connected" no canto superior direito. Caso o status esteja "Disconnected" significa
+que o algoritmo Java não se conectou ao algoritmo C++, possivelmente por uma falha na ordem de execução ou simplesmente devido ao código em C++ não estar sendo executado. Revisite os dois primeiros passos e tente novamente.
+
+4 - O funcionamento do algoritmo e a conexão ocorrem da seguinte maneira: 
+    4.1: Um objeto da classe DisplaySocket é instanciado e já recebe o cliente da conexão TCP como argumento
+    4.2: Então, um objeto da classe Control é instanciado e recebe o caminho para o arquivo config.json com as configurações do simulador, além de também receber o objeto da classe DisplaySocket
+    4.3: Esse mesmo objeto control lê o arquivo config.json através de um método de seu objeto da classe Config e então cria um objeto da classe Hidrometro passando como argumento os atributos extraídos de config.json e o objeto
+DisplaySocket.
+    4.4: Quando o objeto da classe Hidrometro é criado, ele utiliza o objeto DisplaySocket passado como seu Display através de uma relação de herança e polimorfismo, e também cria um objeto da classe Medicao
+    4.5: Então, o objeto control inicia a simulação do hidrômetro, que utiliza de seu objeto da classe Medicao para realizar os cálculos de simulação do volume acumulado
+    4.6: Após a medição, o resultado é passado pelo próprio hidrômetro ao seu display, que então passa a informação via TCP para o objeto da classe HidrometroDisplay implementado em Java
+    4.7: Assim, esse objeto processa a informação do volume acumulado e a utiliza para exibir os valores na tela e alterar o sentido dos ponteiros no relógio
+    4.8: E dessa forma o código roda ininterruptamente através de um while true da própria execução do hidrômetro, com pausas feitas através de um método sleep por uma quantidade de tempo configurável pelo arquivo config.json
+
+5 - O código está inteiramente comentado para sanar possíveis dúvidas quanto ao seu funcionamento e lógicas dos métodos e operações realizadas
+
+
+!!!!!!!! IMPORTANTE !!!!!!!!
+        
+    LEIA E INTERPRETE A UML FEITA ATRAVÉS DO ARQUIVO PDF 
+
+!!!!!!!! IMPORTANTE !!!!!!!!
+
