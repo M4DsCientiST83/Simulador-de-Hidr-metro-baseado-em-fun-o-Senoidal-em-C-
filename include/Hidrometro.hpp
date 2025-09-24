@@ -9,7 +9,7 @@
 
 class Hidrometro
 {
-
+    // Classe principal com todos os atributos e características que o hidrômetro simulado possui
     public: 
     
         Hidrometro(double dE, double vmFA, int tu, Display* disp = nullptr);

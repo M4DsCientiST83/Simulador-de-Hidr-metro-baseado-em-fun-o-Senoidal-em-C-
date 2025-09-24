@@ -3,9 +3,10 @@
 
 Control::Control(const string &arquivoConfig, Display *disp)
 {
+    // Executa o algoritmo de leitura
     config.carregarDeArquivo(arquivoConfig);
 
-    // Passa o display para o hidrometro
+    // Constrói um objeto Hidrômetro utilizando os atributos extraídos do arquivo .json 
     hidrometro = new Hidrometro(config.getdE(), config.getvmFA(), config.gettu(), disp);
 }
 
@@ -16,5 +17,6 @@ Control::~Control()
 
 void Control::executar()
 {
+    // Executa a simulação
     hidrometro->simular();
 }

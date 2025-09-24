@@ -11,16 +11,13 @@
 
 class DisplaySocket : public Display 
 {
+    // Classe responsável pelo envio dos valores de volume medidos pelo hidrômetro ao algoritmo java para exibição na tela
     public:
 
         DisplaySocket(SOCKET clientSocket);
 
-        void exibir(int tempo, double volume) override 
-        {
-            std::string msg = "tempo=" + std::to_string(tempo) + ";volume=" + std::to_string(volume) + "\n";
-            send(socket_fd, msg.c_str(), (int)msg.size(), 0);
-        }
-
+        void exibir(int tempo, double volume) override;
+        
     private:
 
         SOCKET socket_fd;

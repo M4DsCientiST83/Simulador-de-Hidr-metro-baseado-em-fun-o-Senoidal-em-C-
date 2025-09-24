@@ -12,19 +12,19 @@ using std::string;
 
 class Config
 {
+    // Classe para leitura e extração dos dados do arquivo json de configuração 
     public:
 
         Config();
-        void carregarDeArquivo(const string& nomeArquivo);
-
         ~Config() = default;
 
+        void carregarDeArquivo(const string& nomeArquivo);
         double getdE();
         double getvmFA();
         int gettu();
 
     private:
-
+        // Atributos armazenados pela classe para que sejam passados para o Hidrômetro
         double diamEnt; 
         double velmedFA;
         int tempoatt; 

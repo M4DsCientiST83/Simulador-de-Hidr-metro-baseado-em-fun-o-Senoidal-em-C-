@@ -10,7 +10,7 @@ using std::sin;
 
 class Medicao
 {
-
+    // Classe responsável por realizar os cálculos e operações para obtenção de valores de volume por hora
     public:
         
         Medicao();

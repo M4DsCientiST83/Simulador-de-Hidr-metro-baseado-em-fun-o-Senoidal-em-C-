@@ -31,12 +31,13 @@ int Hidrometro::getTempoUpdate()
 
 void Hidrometro::simular()
 {
+    // Utiliza a classe medição para realizar os cálculos e a função exibir sobrescrita da classe DisplaySocket para atualizar as informações a serem exibidas na tela
     int hora = 0;
     while(true) 
     {
         medicao.atualizar(hora, diam_entrada, velmediaFluxoAgua);
         display->exibir(hora, medicao.getVolume());
-        std::this_thread::sleep_for(std::chrono::seconds(tempo_update));
+        std::this_thread::sleep_for(std::chrono::seconds(tempo_update)); // sleep para alterar a velocidade com que o simulador roda
         hora++;
     }
 }

@@ -9,6 +9,7 @@ using std::string;
 
 class Control
 {
+    // Classe de inicialização de todo o algoritmo e responsável por sincronizar a configuração ao hidrômetro
     public:
 
         Control(const string &arquivoConfig, Display *disp);

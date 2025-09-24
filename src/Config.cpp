@@ -8,8 +8,9 @@ Config::Config() : diamEnt(0.0), velmedFA(0.0), tempoatt(0) {}
 
 void Config::carregarDeArquivo(const string &nomeArquivo)
 {
+    // Carrega o .json 
     ifstream arquivo(nomeArquivo);
-    double dE = 0.1, vmFA = 1.0; // valores padrão
+    double dE = 0.1, vmFA = 1.0; 
     int tu = 2;
 
     if (!arquivo) 
@@ -26,12 +27,15 @@ void Config::carregarDeArquivo(const string &nomeArquivo)
         if (j.contains("velocidade média do fluxo de Água pelo cano de entrada")) vmFA = j["velocidade média do fluxo de Água pelo cano de entrada"];
         if (j.contains("tempo de atualização do simulador")) tu = j["tempo de atualização do simulador"];
     }
+
+    // Atualiza os atributos com os valores lidos
     
     diamEnt = dE; 
     velmedFA = vmFA;
     tempoatt = tu;
 }
 
+// Get padrões para obtenção dos dados armazenados
 double Config::getdE()
 {
     return diamEnt;

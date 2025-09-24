@@ -16,20 +16,22 @@ int main()
     #ifdef _WIN32
         // Inicializa Winsock
         WSADATA wsaData;
-        if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
+        if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0) 
+        {
             std::cerr << "WSAStartup failed\n";
             return 1;
         }
     #endif
 
-    // Configuração de caminho
+    // Configura o caminho para o arquivo de configuração
     fs::path caminhoBase = fs::current_path().parent_path();
     fs::path configPath = caminhoBase / "data" / "config.json";
 
 
-    // Criar socket TCP
+    // Cria socket TCP
     SOCKET server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd == INVALID_SOCKET) {
+    if (server_fd == INVALID_SOCKET) 
+    {
         std::cerr << "Erro ao criar socket\n";
         return 1;
     }
@@ -51,23 +53,22 @@ int main()
 
     std::cout << "Aguardando conexão Java na porta 5000...\n";
     SOCKET client_fd = accept(server_fd, nullptr, nullptr);
-    if (client_fd == INVALID_SOCKET) {
+
+    if (client_fd == INVALID_SOCKET) 
+    {
         std::cerr << "Erro no accept\n";
         return 1;
     }
     std::cout << "Cliente Java conectado!\n";
 
-    // Substitui o display por DisplaySocket
-
-
-    // Injetar displaySocket no hidrometro (adaptar Hidrometro p/ aceitar Display* se necessário)
-    // Por enquanto, se você quiser, pode trocar diretamente o Display interno por este DisplaySocket
-
-    // Loop de simulação enviando dados para Java
+    // Inicializa um objeto da classe DisplaySocket passando o cliente como parâmetro para o envio dos valores de volume calculados pelo algoritmo
     DisplaySocket displaySocket(client_fd);
+
+    // Inicializa um objeto da classe Control que vai executar todo o algoritmo 
     Control control(configPath.string(), &displaySocket);
     control.executar();
 
+    // Gera o Loop para que o código permaneça rodando de maneira ininterrupta
     closesocket(client_fd);
     closesocket(server_fd);
     WSACleanup();
