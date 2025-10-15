@@ -13,21 +13,25 @@ namespace fs = std::filesystem;
 
 // Função que será executada por cada thread para gerenciar uma simulação de cliente
 void run_simulation(SOCKET client_fd, std::string configPath) {
-    std::cout << "Thread criada para o cliente. ID da Thread: " << std::this_thread::get_id() << std::endl;
+    auto thread_id = std::this_thread::get_id(); // Pega o ID da thread para facilitar a depuração
+    std::cout << "Thread " << thread_id << ": Iniciando simulacao para o cliente socket " << client_fd << std::endl;
 
     try {
         // 1. Inicializa um objeto da classe DisplaySocket para este cliente específico
         DisplaySocket displaySocket(client_fd);
+        std::cout << "Thread " << thread_id << ": Objeto DisplaySocket criado." << std::endl;
+
 
         // 2. Inicializa um objeto da classe Control que vai executar todo o algoritmo para este cliente
         Control control(configPath, &displaySocket);
+        std::cout << "Thread " << thread_id << ": Objeto Control criado. Iniciando execucao..." << std::endl;
         control.executar();
     } catch (const std::exception& e) {
-        std::cerr << "Erro na thread " << std::this_thread::get_id() << ": " << e.what() << std::endl;
+        std::cerr << "ERRO na thread " << thread_id << ": " << e.what() << std::endl;
     }
 
-    // 3. Encerra a conexão com este cliente quando a simulação terminar (neste caso, nunca, pois é um loop infinito)
-    std::cout << "Cliente desconectado. Encerrando thread: " << std::this_thread::get_id() << std::endl;
+    // 3. Encerra a conexão com este cliente
+    std::cout << "Thread " << thread_id << ": Cliente desconectado." << std::endl;
     closesocket(client_fd);
 }
 
