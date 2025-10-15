@@ -1,5 +1,5 @@
-#include "Control.hpp"
-#include "Config.hpp"
+#include "../include/Control.hpp"
+#include "../include/Config.hpp"
 
 Control::Control(const string &arquivoConfig, Display *disp)
 {

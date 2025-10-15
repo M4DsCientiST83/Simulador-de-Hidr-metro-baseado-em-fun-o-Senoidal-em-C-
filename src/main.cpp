@@ -1,4 +1,4 @@
-#include "Control.hpp"
+#include "Control.cpp"
 #include "DisplaySocket.hpp"
 #include <iostream>
 #include <filesystem>
