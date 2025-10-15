@@ -2,27 +2,28 @@
 #include "DisplaySocket.hpp"
 #include <iostream>
 #include <filesystem>
-#include <thread>   // Incluído para usar threads
-#include <vector>   // Incluído para gerenciar as threads
+#include <thread>
+#include <vector>
+#include <string>
+
+#ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
-
+#include <windows.h> // Header necessário para GetModuleFileNameA
 #pragma comment(lib, "ws2_32.lib")
+#endif
 
 namespace fs = std::filesystem;
 
-// Função que será executada por cada thread para gerenciar uma simulação de cliente
+// Função que será executada por cada thread (sem alterações)
 void run_simulation(SOCKET client_fd, std::string configPath) {
-    auto thread_id = std::this_thread::get_id(); // Pega o ID da thread para facilitar a depuração
+    auto thread_id = std::this_thread::get_id();
     std::cout << "Thread " << thread_id << ": Iniciando simulacao para o cliente socket " << client_fd << std::endl;
 
     try {
-        // 1. Inicializa um objeto da classe DisplaySocket para este cliente específico
         DisplaySocket displaySocket(client_fd);
         std::cout << "Thread " << thread_id << ": Objeto DisplaySocket criado." << std::endl;
 
-
-        // 2. Inicializa um objeto da classe Control que vai executar todo o algoritmo para este cliente
         Control control(configPath, &displaySocket);
         std::cout << "Thread " << thread_id << ": Objeto Control criado. Iniciando execucao..." << std::endl;
         control.executar();
@@ -30,7 +31,6 @@ void run_simulation(SOCKET client_fd, std::string configPath) {
         std::cerr << "ERRO na thread " << thread_id << ": " << e.what() << std::endl;
     }
 
-    // 3. Encerra a conexão com este cliente
     std::cout << "Thread " << thread_id << ": Cliente desconectado." << std::endl;
     closesocket(client_fd);
 }
@@ -39,31 +39,38 @@ int main()
 {
     // Inicializa Winsock
     WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) 
-    {
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
         std::cerr << "WSAStartup failed\n";
         return 1;
     }
 
-    // Configura o caminho para o arquivo de configuração
-    fs::path configPath = fs::current_path().parent_path() / "data" / "config.json";
-    if (!fs::exists(configPath)) {
-        std::cerr << "Arquivo de configuracao nao encontrado em: " << configPath.string() << std::endl;
-        // Tenta um caminho alternativo, comum no VSCode
+    // --- LÓGICA DE CAMINHO ROBUSTA ---
+    // Encontra o caminho do executável para localizar o config.json de forma segura.
+    fs::path configPath;
+    #ifdef _WIN32
+        char exePath[MAX_PATH];
+        GetModuleFileNameA(NULL, exePath, MAX_PATH);
+        // O caminho do executável é: ...\Projeto_Hidro\build\Debug\simulador.exe
+        // Precisamos voltar 3 níveis para chegar à raiz do projeto.
+        configPath = fs::path(exePath).parent_path().parent_path().parent_path() / "data" / "config.json";
+    #else
+        // Fallback para outros sistemas (pode precisar de ajuste)
         configPath = fs::current_path() / "data" / "config.json";
-        if (!fs::exists(configPath)) {
-             std::cerr << "Arquivo de configuracao tambem nao encontrado em: " << configPath.string() << std::endl;
-             WSACleanup();
-             return 1;
-        }
+    #endif
+
+    if (!fs::exists(configPath)) {
+        std::cerr << "Arquivo de configuracao nao encontrado no caminho esperado: " << configPath.string() << std::endl;
+        WSACleanup();
+        system("pause"); // Pausa para que o erro possa ser lido
+        return 1;
     }
     std::cout << "Usando arquivo de configuracao: " << configPath.string() << std::endl;
+    // --- FIM DA LÓGICA DE CAMINHO ---
 
 
     // Cria socket TCP
     SOCKET server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd == INVALID_SOCKET) 
-    {
+    if (server_fd == INVALID_SOCKET) {
         std::cerr << "Erro ao criar socket\n";
         WSACleanup();
         return 1;
@@ -75,13 +82,14 @@ int main()
     address.sin_port = htons(5000);
 
     if (bind(server_fd, (sockaddr*)&address, sizeof(address)) == SOCKET_ERROR) {
-        std::cerr << "Erro no bind\n";
+        std::cerr << "Erro no bind. Verifique se o programa ja nao esta rodando.\n";
         closesocket(server_fd);
         WSACleanup();
+        system("pause");
         return 1;
     }
 
-    if (listen(server_fd, 5) == SOCKET_ERROR) { // Aumentado para um backlog de 5
+    if (listen(server_fd, 5) == SOCKET_ERROR) {
         std::cerr << "Erro no listen\n";
         closesocket(server_fd);
         WSACleanup();
@@ -99,39 +107,27 @@ int main()
     {
         SOCKET client_fd = accept(server_fd, nullptr, nullptr);
 
-        if (client_fd == INVALID_SOCKET) 
-        {
+        if (client_fd == INVALID_SOCKET) {
             std::cerr << "Erro no accept. Encerrando servidor.\n";
-            break; // Sai do loop se houver um erro no accept
+            break; 
         }
 
         std::cout << "Cliente Java conectado! Socket: " << client_fd << std::endl;
         connected_clients++;
         std::cout << "Total de clientes conectados: " << connected_clients << "/" << MAX_CLIENTS << std::endl;
         
-        // Cria e inicia uma nova thread para o cliente recém-conectado
         client_threads.emplace_back(run_simulation, client_fd, configPath.string());
-        client_threads.back().detach(); // Permite que a thread rode de forma independente
+        client_threads.back().detach(); 
     }
 
-    std::cout << "Numero maximo de clientes atingido. O servidor nao aceitara novas conexoes." << std::endl;
-    // O programa principal pode terminar aqui ou esperar por um sinal para desligar.
-    // Para este exemplo, ele vai simplesmente encerrar após aceitar 5 clientes.
-
-    // Encerra o socket do servidor
-    closesocket(server_fd);
-    WSACleanup();
-
-    // Como as threads foram desanexadas (detach), o programa principal pode terminar
-    // enquanto as simulações continuam rodando em suas próprias threads.
-    // É importante notar que em uma aplicação real, seria necessário um mecanismo
-    // mais robusto para gerenciar o ciclo de vida das threads.
+    std::cout << "Numero maximo de clientes atingido ou servidor encerrado." << std::endl;
     
-    // Para manter o servidor "vivo" enquanto as threads rodam, 
-    // podemos adicionar um loop de espera aqui.
-    std::cout << "Pressione Enter para encerrar o servidor e todas as conexoes..." << std::endl;
+    // Mantém o programa principal vivo para que as threads não sejam terminadas abruptamente.
+    std::cout << "Pressione Enter para encerrar o servidor..." << std::endl;
     std::cin.get();
 
+    closesocket(server_fd);
+    WSACleanup();
 
     return 0;
 }
